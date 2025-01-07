@@ -13,7 +13,7 @@ pipelines:
               # Install pytest
               - pip install pytest
               # Run the tests (adjust the path to your core app)
-              - pytest -v core/test.py --junitxml=test-reports/report.xml
+              - pytest -v core/tests.py --junitxml=test-reports/report.xml
         - step:
             name: Lint code
             script:
