@@ -8,12 +8,10 @@ pipelines:
             caches:
               - pip
             script:
-              # Install dependencies if requirements.txt exists
+              # Install dependencies from the requirements.txt
               - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-              # Install pytest
-              - pip install pytest
-              # Run the tests (adjust the path to your core app)
-              - pytest -v core/tests.py --junitxml=test-reports/report.xml
+              # Run the tests located in the core directory
+              - pytest -v core/tests.py --junitxml=/opt/atlassian/pipelines/agent/build/test-reports/report.xml
         - step:
             name: Lint code
             script:
@@ -21,3 +19,4 @@ pipelines:
               - pip install flake8
               # Run flake8 to lint the code (excluding dist, build, and migrations directories)
               - flake8 . --extend-exclude=dist,build,migrations --show-source --statistics
+git add requirements.txt
