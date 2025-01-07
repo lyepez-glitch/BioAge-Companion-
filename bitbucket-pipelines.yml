@@ -19,4 +19,3 @@ pipelines:
               - pip install flake8
               # Run flake8 to lint the code (excluding dist, build, and migrations directories)
               - flake8 . --extend-exclude=dist,build,migrations --show-source --statistics
-git add requirements.txt
