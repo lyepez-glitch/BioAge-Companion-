@@ -12,8 +12,8 @@ pipelines:
               - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
               # Install pytest
               - pip install pytest
-              # Run the tests (adjust the path to your test.py)
-              - pytest -v test.py --junitxml=test-reports/report.xml
+              # Run the tests (adjust the path to your core app)
+              - pytest -v core/test.py --junitxml=test-reports/report.xml
         - step:
             name: Lint code
             script:
