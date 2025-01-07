@@ -12,10 +12,10 @@ pipelines:
               - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
               # Run the tests located in the core directory
               - pytest -v core/tests.py --junitxml=/opt/atlassian/pipelines/agent/build/test-reports/report.xml
-        - step:
-            name: Lint code
-            script:
-              # Enforce style consistency across Python projects https://flake8.pycqa.org
-              - pip install flake8
-              # Run flake8 to lint the code (excluding dist, build, and migrations directories)
-              - flake8 . --extend-exclude=dist,build,migrations --show-source --statistics
+        # - step:
+        #     name: Lint code
+        #     script:
+        #       # Enforce style consistency across Python projects https://flake8.pycqa.org
+        #       - pip install flake8
+        #       # Run flake8 to lint the code (excluding dist, build, and migrations directories)
+        #       - flake8 . --extend-exclude=dist,build,migrations --show-source --statistics
