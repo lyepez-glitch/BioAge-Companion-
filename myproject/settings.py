@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@e-p_n+bi677+75cipiha)zjhm!4v*%=kor80cho(d!i0!on()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1','bioage-companion.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1','bioage-companion.onrender.com','0.0.0.0']
 
 CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
