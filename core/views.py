@@ -88,6 +88,10 @@ class HealthMetricsInputView(views.APIView):
 
 
 class BiologicalAgeCalculationView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        return Response({"message": "This is a GET response"})
+
+
     def post(self, request, *args, **kwargs):
         user = request.user
         health_metrics = HealthMetrics.objects.get(user=user)
