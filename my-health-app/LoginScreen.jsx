@@ -11,7 +11,7 @@ export default function LoginScreen({ navigation }) {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/token/', {
+            const response = await axios.post('https://bioage-companion.onrender.com/api/token/', {
                 username,
                 password,
             });

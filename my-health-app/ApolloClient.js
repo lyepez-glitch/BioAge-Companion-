@@ -5,7 +5,7 @@ import { setContext } from '@apollo/client/link/context'; // Used to set headers
 // Refresh token function (make sure you implement it in your backend)
 const refreshToken = async(refreshToken) => {
     try {
-        const response = await fetch('http://localhost:8000/refresh-token', {
+        const response = await fetch('https://bioage-companion.onrender.com/refresh-token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ refreshToken })
@@ -63,7 +63,7 @@ const errorLink = new ApolloLink((operation, forward) => {
 
 // Apollo Client setup
 const createApolloClient = async() => {
-    const link = ApolloLink.from([authLink, errorLink, new HttpLink({ uri: 'http://localhost:8000/api/graphql/' })]);
+    const link = ApolloLink.from([authLink, errorLink, new HttpLink({ uri: 'https://bioage-companion.onrender.com/api/graphql/' })]);
 
     return new ApolloClient({
         link,

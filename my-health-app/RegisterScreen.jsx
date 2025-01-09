@@ -12,7 +12,7 @@ export default function RegisterScreen({ navigation }) {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/register/', {
+      const response = await axios.post('https://bioage-companion.onrender.com/api/register/', {
         username,
         email,
         password,

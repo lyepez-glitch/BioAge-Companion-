@@ -7,7 +7,7 @@ export default function BiologicalAgeScreen({ navigation }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch('http://localhost:8000/api/biological-age/', {
+    fetch('https://bioage-companion.onrender.com/api/biological-age/', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,

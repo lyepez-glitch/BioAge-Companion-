@@ -10,7 +10,7 @@ export default function ProfileSetupScreen({ navigation }) {
 
   const handleProfileSubmit = async () => {
     const token = localStorage.getItem("token");
-    fetch('http://localhost:8000/api/profile-setup/', {
+    fetch('https://bioage-companion.onrender.com/api/profile-setup/', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
