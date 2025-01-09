@@ -9,7 +9,17 @@ from .models import HealthMetrics
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from .models import Recommendations
+from graphql_jwt.middleware import JSONWebTokenMiddleware
 User = get_user_model()
+
+from django.views.decorators.csrf import csrf_exempt
+from graphene_django.views import GraphQLView
+
+@csrf_exempt
+def graphql(request, *args, **kwargs):
+    view = GraphQLView.as_view(graphiql=True, middleware=[JSONWebTokenMiddleware()])
+    return view(request, *args, **kwargs)
+
 class LoginUserView(TokenObtainPairView):
     """
     View for logging in users and generating JWT tokens.

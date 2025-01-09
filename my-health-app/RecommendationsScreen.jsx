@@ -1,33 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useQuery } from '@apollo/client';
+import gql from 'graphql-tag';
+import { Card, ActivityIndicator } from 'react-native-paper';
+
+// Define the GraphQL query for recommendations
+const GET_RECOMMENDATIONS = gql`
+  query GetRecommendations {
+    recommendations {
+      id
+      recommendationText
+    }
+  }
+`;
 
 export default function RecommendationsScreen() {
-  const [recommendations, setRecommendations] = useState([]);
+  const { loading, error, data } = useQuery(GET_RECOMMENDATIONS);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    fetch('http://localhost:8000/api/recommendations/', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('response',data)
-        setRecommendations(data.recommendations);
-      });
-
-
-      // Replace with real recommendations
-  }, []);
+  if (loading) return <ActivityIndicator animating={true} size="large" />;
+  if (error) return <Text>Error: {error.message}</Text>;
 
   return (
     <View style={styles.container}>
-      <Text>Personalized Recommendations:</Text>
-      {recommendations.map((rec, index) => (
-        <Text key={index}>{rec}</Text>
+      <Text style={styles.header}>Personalized Recommendations:</Text>
+      {data.recommendations.map((rec) => (
+        <Card key={rec.id} style={styles.card}>
+          <Card.Content>
+            <Text>{rec.recommendationText}</Text>
+          </Card.Content>
+        </Card>
       ))}
     </View>
   );
@@ -36,7 +37,23 @@ export default function RecommendationsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     padding: 20,
   },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  card: {
+    marginBottom: 10,
+    padding: 10,
+  },
+  input: {
+    marginBottom: 10,
+    width: '80%'
+  },
+  button: {
+    marginTop: 20,
+    width: '80%'
+  }
 });

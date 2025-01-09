@@ -1,93 +1,68 @@
 import graphene
-from core.models import User
-from graphql_jwt.shortcuts import get_token, create_refresh_token
-from .models import HealthMetrics, Recommendations
+from graphene_django.types import DjangoObjectType
+from .models import HealthMetrics,Recommendations
 
+# Define the HealthMetricsType to expose the HealthMetrics model through GraphQL
+class HealthMetricsType(DjangoObjectType):
+    class Meta:
+        model = HealthMetrics
 
-# Mutation: Register User
-class RegisterUser(graphene.Mutation):
-    class Arguments:
-        username = graphene.String(required=True)
-        email = graphene.String(required=True)
-        password = graphene.String(required=True)
+class RecommendationsType(DjangoObjectType):
+    class Meta:
+        model = Recommendations
 
-    success = graphene.Boolean()
-    token = graphene.String()
-    refresh_token = graphene.String()
-
-    def mutate(self, info, username, email, password):
-        user = User.objects.create_user(username=username, email=email, password=password)
-        token = get_token(user)
-        refresh_token = create_refresh_token(user)
-        return RegisterUser(success=True, token=token, refresh_token=refresh_token)
-
-
-# Mutation: Login User
-class LoginUser(graphene.Mutation):
-    class Arguments:
-        username = graphene.String(required=True)
-        password = graphene.String(required=True)
-
-    success = graphene.Boolean()
-    token = graphene.String()
-    refresh_token = graphene.String()
-
-    def mutate(self, info, username, password):
-        user = User.objects.filter(username=username).first()
-        if user and user.check_password(password):
-            token = get_token(user)
-            refresh_token = create_refresh_token(user)
-            return LoginUser(success=True, token=token, refresh_token=refresh_token)
-        return LoginUser(success=False, token=None, refresh_token=None)
-
-
-# Mutation: Add Health Metrics
-class AddHealthMetrics(graphene.Mutation):
-    class Arguments:
-        height = graphene.Float(required=True)
-        weight = graphene.Float(required=True)
-        age = graphene.Int(required=True)
-
-    success = graphene.Boolean()
-
-    def mutate(self, info, height, weight, age):
-        user = info.context.user
-        if user.is_anonymous:
-            raise Exception("Authentication required!")
-        HealthMetrics.objects.create(user=user, height=height, weight=weight, age=age)
-        return AddHealthMetrics(success=True)
-
-
-# Query: Fetch Biological Age and Recommendations
+# Query to get health metrics for the logged-in user
 class Query(graphene.ObjectType):
-    hello = graphene.String(default_value="Hello, World!")
-    biological_age = graphene.Int()
-    personalized_recommendations = graphene.List(graphene.String)
+    health_metrics = graphene.Field(HealthMetricsType)
+    recommendations = graphene.List(RecommendationsType)
 
-    def resolve_biological_age(self, info):
+    def resolve_health_metrics(self, info):
         user = info.context.user
         if user.is_anonymous:
-            raise Exception("Authentication required!")
+            raise Exception("Authentication required")
         health_metrics = HealthMetrics.objects.filter(user=user).first()
-        if not health_metrics:
-            return None
-        # Example: Calculate biological age dynamically
-        return health_metrics.age - 5  # Replace with your logic
-
-    def resolve_personalized_recommendations(self, info):
+        if health_metrics:
+            return health_metrics
+        return None
+    def resolve_recommendations(self, info):
         user = info.context.user
         if user.is_anonymous:
-            raise Exception("Authentication required!")
+            raise Exception("Authentication required")
+        # Fetch recommendations for the logged-in user
         recommendations = Recommendations.objects.filter(user=user)
-        return [rec.text for rec in recommendations]
+        return recommendations
 
+class UpdateHealthMetrics(graphene.Mutation):
+    class Arguments:
+        resting_heart_rate = graphene.Float()  # Only include the fields being updated in the mutation
+        hours_of_sleep = graphene.Float()
+        daily_activity_level = graphene.Float()
 
-# Combine All Mutations
+    success = graphene.Boolean()
+
+    def mutate(self, info, resting_heart_rate, hours_of_sleep, daily_activity_level):
+        user = info.context.user
+        print('user info' + str(user) + ' info ' + str(info.context))
+        # if user.is_anonymous:
+        #     raise Exception("Authentication required")
+
+        # Update the health metrics for the user
+        health_metrics, created = HealthMetrics.objects.update_or_create(
+            user=user,
+            defaults={
+                "resting_heart_rate": resting_heart_rate,
+                "hours_of_sleep": hours_of_sleep,
+                "daily_activity_level": daily_activity_level
+            }
+        )
+
+        return UpdateHealthMetrics(success=True)
+
 class Mutation(graphene.ObjectType):
-    register_user = RegisterUser.Field()
-    login_user = LoginUser.Field()
-    add_health_metrics = AddHealthMetrics.Field()
+    update_health_metrics = UpdateHealthMetrics.Field()
 
 
-# Final Schema
+# Define the schema to include both Query and Mutation
 schema = graphene.Schema(query=Query, mutation=Mutation)
+
+

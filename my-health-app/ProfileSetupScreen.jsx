@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { TextInput, Button } from 'react-native-paper';
 import axios from 'axios';
 
 export default function ProfileSetupScreen({ navigation }) {
@@ -7,9 +8,8 @@ export default function ProfileSetupScreen({ navigation }) {
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
 
-  const handleProfileSubmit = async() => {
+  const handleProfileSubmit = async () => {
     const token = localStorage.getItem("token");
-    // You would typically send this data to your backend here
     fetch('http://localhost:8000/api/profile-setup/', {
       method: 'POST',
       headers: {
@@ -23,38 +23,38 @@ export default function ProfileSetupScreen({ navigation }) {
     })
       .then(response => response.json())
       .then(data => {
-        console.log('response',data)
+        console.log('response', data);
       });
-
-
 
     navigation.navigate('HealthMetrics');
   };
 
   return (
     <View style={styles.container}>
-      <Text>Enter your Profile Details</Text>
+      <Text style={styles.header}>Enter your Profile Details</Text>
       <TextInput
-        style={styles.input}
-        placeholder="Age"
+        label="Age"
         keyboardType="numeric"
         value={age}
         onChangeText={setAge}
+        style={styles.input}
       />
       <TextInput
-        style={styles.input}
-        placeholder="Weight (kg)"
+        label="Weight (kg)"
         keyboardType="numeric"
         value={weight}
         onChangeText={setWeight}
+        style={styles.input}
       />
       <TextInput
-        style={styles.input}
-        placeholder="Height"
+        label="Height"
         value={height}
         onChangeText={setHeight}
+        style={styles.input}
       />
-      <Button title="Next" onPress={handleProfileSubmit} />
+      <Button mode="contained" onPress={handleProfileSubmit} style={styles.button}>
+        Next
+      </Button>
     </View>
   );
 }
@@ -65,11 +65,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
+  header: {
+    fontSize: 24,
+    marginBottom: 20,
+    textAlign: 'center', // Center the text horizontally
+    fontWeight: 'bold', // Optional: Makes it bold
+  },
   input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
     marginBottom: 10,
-    paddingLeft: 10,
+    width: '70%', // Adjust the width to make it more appropriate
+    alignSelf: 'center', // Center the input fields
+  },
+  button: {
+    marginTop: 20,
+    width: '70%', // Adjust width to match the input fields
+    alignSelf: 'center', // Center the button
   },
 });

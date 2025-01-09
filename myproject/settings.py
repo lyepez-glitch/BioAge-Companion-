@@ -25,9 +25,9 @@ SECRET_KEY = 'django-insecure-@e-p_n+bi677+75cipiha)zjhm!4v*%=kor80cho(d!i0!on()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-
+CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'graphene_django',
-    'graphql_jwt',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
@@ -48,21 +47,19 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8081",
 ]
 
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
-GRAPHENE = {
-    'SCHEMA': 'core.schema.schema',
-    'MIDDLEWARE': [
-        'graphql_jwt.middleware.JSONWebTokenMiddleware',
-    ]
-}
+
+
 AUTH_USER_MODEL = 'core.User'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -70,9 +67,20 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware'
+    'core.middleware.jwt_auth_middleware',  # Your custom middleware
 ]
+
+GRAPHENE = {
+    'SCHEMA': 'core.schema.schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',  # GraphQL JWT Middleware
+    ]
+}
+
+AUTHENTICATION_CLASSES = (
+    'graphql_jwt.authentication.JSONWebTokenAuthentication',
+    'rest_framework.authentication.SessionAuthentication',
+)
 
 ROOT_URLCONF = 'myproject.urls'
 
@@ -80,6 +88,7 @@ AUTHENTICATION_BACKENDS = [
     "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
+
 
 TEMPLATES = [
     {
