@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@e-p_n+bi677+75cipiha)zjhm!4v*%=kor80cho(d!i0!on()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1','bioage-companion.onrender.com','0.0.0.0']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1','bioage-companion.onrender.com','0.0.0.0','https://web-build-i8y9gh339-lucas-projects-f61d5cb5.vercel.app','https://dist-krcnnb1wd-lucas-projects-f61d5cb5.vercel.app']
 
 CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8081",
+    "https://web-build-i8y9gh339-lucas-projects-f61d5cb5.vercel.app"
 ]
 
 
