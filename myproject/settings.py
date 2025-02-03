@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8081",
-    "https://bio-age-frontend-qyqv.vercel.app"
+    "bio-age-frontend.vercel.app"
 ]
 
 
