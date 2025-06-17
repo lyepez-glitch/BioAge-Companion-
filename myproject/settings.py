@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import os
+import dj_database_url
 
 from pathlib import Path
 
@@ -25,7 +27,7 @@ SECRET_KEY = 'django-insecure-@e-p_n+bi677+75cipiha)zjhm!4v*%=kor80cho(d!i0!on()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1','bioage-companion.onrender.com','0.0.0.0','https://bio-age-frontend.vercel.app']
+ALLOWED_HOSTS = ['localhost', 'http://localhost:8081','127.0.0.1','bioage-companion.onrender.com','0.0.0.0','https://bio-age-frontend.vercel.app']
 
 CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
@@ -113,14 +115,25 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'bio_age_companion',
+#         'USER': 'bio_age_companion_user',
+#         'PASSWORD': 'eK6kHf6qaIjpOvAyGACcz3DqVfDBZ1Ut',
+#         'HOST': 'dpg-cttn0ojv2p9s738ju3vg-a.oregon-postgres.render.com',
+#         'PORT': '5432',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bio_age_companion',
-        'USER': 'bio_age_companion_user',
-        'PASSWORD': 'eK6kHf6qaIjpOvAyGACcz3DqVfDBZ1Ut',
-        'HOST': 'dpg-cttn0ojv2p9s738ju3vg-a.oregon-postgres.render.com',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 
