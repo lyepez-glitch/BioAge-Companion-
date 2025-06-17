@@ -74,7 +74,7 @@ class HealthMetricsInputView(views.APIView):
         user = request.user
         data = request.data
 
-        ## Update or create health metrics for the user
+        # Update or create health metrics for the user
         health_metrics, created = HealthMetrics.objects.update_or_create(
             user=user,
             defaults={
