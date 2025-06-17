@@ -32,7 +32,7 @@ class RegisterUserView(views.APIView):
         if User.objects.filter(username=data["username"]).exists():
             return Response({"error": "Username already exists!"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create new user
+        ## Create new user
         user = User.objects.create(
             username=data["username"],
             email=data["email"],
